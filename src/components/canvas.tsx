@@ -11,9 +11,11 @@ import {
 } from "@xyflow/react";
 import { useCallback, useState } from "react";
 import { TelegramNode } from "./telegramNode";
+import { GmailNode } from "./gmailNode";
 
 const nodeTypes = {
   telegramNode: TelegramNode,
+  gmailNode: GmailNode,
 };
 
 const initialNodes: Node[] = [
@@ -26,6 +28,7 @@ const initialNodes: Node[] = [
   {
     id: "2",
     data: { label: "Telegram 2" },
+    type: "gmailNode",
     position: { x: 5, y: 100 },
   },
   {
