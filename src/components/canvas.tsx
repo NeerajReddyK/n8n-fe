@@ -9,9 +9,10 @@ import {
   type OnNodesChange,
   ReactFlow,
 } from "@xyflow/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TelegramNode } from "./telegramNode";
 import { GmailNode } from "./gmailNode";
+import axios from "axios";
 
 const nodeTypes = {
   telegramNode: TelegramNode,
@@ -21,34 +22,54 @@ const nodeTypes = {
 const initialNodes: Node[] = [
   {
     id: "1",
-    data: { label: "Telegram" },
-    type: "telegramNode",
-    position: { x: 5, y: 10 },
+    data: { label: "" },
+    position: { x: 0, y: 0 },
   },
-  {
-    id: "2",
-    data: { label: "Telegram 2" },
-    type: "gmailNode",
-    position: { x: 5, y: 100 },
-  },
-  {
-    id: "3",
-    data: { label: "Telegram 3" },
-    position: { x: 500, y: 100 },
-  },
+  //   {
+  //     id: "2",
+  //     data: { label: "Telegram 2" },
+  //     type: "gmailNode",
+  //     position: { x: 5, y: 100 },
+  //   },
+  //   {
+  //     id: "3",
+  //     data: { label: "Telegram 3" },
+  //     position: { x: 500, y: 100 },
+  //   },
 ];
 
 const initialEdges: Edge[] = [
   {
-    id: "1-2",
-    source: "1",
-    target: "2",
+    id: "",
+    source: "",
+    target: "",
   },
 ];
 
-export const Flow = () => {
+export const Canvas = ({ workflowId }: { workflowId: string }) => {
   const [nodes, setNodes] = useState<Node[]>(initialNodes);
   const [edges, setEdges] = useState<Edge[]>(initialEdges);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BE_URL}workflow/${workflowId}`,
+          {
+            headers: {
+              Authorization: import.meta.env.VITE_TOKEN,
+            },
+          }
+        );
+        console.log("----------");
+        console.log(response.data.workflow.nodes);
+        setNodes(response.data.workflow.nodes);
+      } catch (error) {
+        console.error("Error fetching workflow: ", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const onNodesChange: OnNodesChange = useCallback(
     (changes) => {

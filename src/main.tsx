@@ -2,11 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+import { BrowserRouter } from "react-router-dom";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <div className="absolute inset-0 h-full w-full bg-neutral-800 bg-[radial-gradient(#78716c_1px,transparent_1px)] [background-size:16px_16px]">
+    <BrowserRouter>
       <App />
-    </div>
+    </BrowserRouter>
   </StrictMode>
 );
