@@ -36,7 +36,7 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
           }
         );
         setNodes(response.data.workflow.nodes || []);
-        // setEdges(response.data.workflow.edges || []);
+        setEdges(response.data.workflow.edges || []);
       } catch (error) {
         console.error("Error fetching workflow: ", error);
       }
