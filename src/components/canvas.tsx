@@ -6,6 +6,7 @@ import {
   type Node,
   type OnConnect,
   type OnEdgesChange,
+  type OnNodeDrag,
   type OnNodesChange,
   ReactFlow,
 } from "@xyflow/react";
@@ -19,36 +20,9 @@ const nodeTypes = {
   gmailNode: GmailNode,
 };
 
-const initialNodes: Node[] = [
-  {
-    id: "1",
-    data: { label: "" },
-    position: { x: 0, y: 0 },
-  },
-  //   {
-  //     id: "2",
-  //     data: { label: "Telegram 2" },
-  //     type: "gmailNode",
-  //     position: { x: 5, y: 100 },
-  //   },
-  //   {
-  //     id: "3",
-  //     data: { label: "Telegram 3" },
-  //     position: { x: 500, y: 100 },
-  //   },
-];
-
-const initialEdges: Edge[] = [
-  {
-    id: "",
-    source: "",
-    target: "",
-  },
-];
-
 export const Canvas = ({ workflowId }: { workflowId: string }) => {
-  const [nodes, setNodes] = useState<Node[]>(initialNodes);
-  const [edges, setEdges] = useState<Edge[]>(initialEdges);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,9 +35,8 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
             },
           }
         );
-        console.log("----------");
-        console.log(response.data.workflow.nodes);
-        setNodes(response.data.workflow.nodes);
+        setNodes(response.data.workflow.nodes || []);
+        // setEdges(response.data.workflow.edges || []);
       } catch (error) {
         console.error("Error fetching workflow: ", error);
       }
@@ -93,6 +66,28 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
     [setEdges]
   );
 
+  const onNodeDragStop: OnNodeDrag = async (_, node) => {
+    try {
+      const updatedNodes = nodes.map((nd: Node) =>
+        nd.id === node.id ? node : nd
+      );
+
+      axios.put(
+        `${import.meta.env.VITE_BE_URL}workflow/${workflowId}`,
+        {
+          nodes: updatedNodes,
+        },
+        {
+          headers: {
+            Authorization: import.meta.env.VITE_TOKEN,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error updating the node on the backend: ", error);
+    }
+  };
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -101,6 +96,7 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
       onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
       onConnect={onConnect}
+      onNodeDragStop={onNodeDragStop}
     />
   );
 };
