@@ -39,7 +39,7 @@ export const WorkflowsList = () => {
           `${import.meta.env.VITE_BE_URL}workflow`,
           {
             headers: {
-              Authorization: `${import.meta.env.VITE_TOKEN}`,
+              Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
             },
           }
         );

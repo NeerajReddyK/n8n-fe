@@ -1,3 +1,8 @@
+import { useParams } from "react-router-dom";
+import { TelegramOnClick } from "../onclicks/TelegramOnClick";
+import { useContext } from "react";
+import { NodesContext } from "../context/nodesContext";
+
 export type NodeItemProps = {
   title: string;
   description: string;
@@ -21,11 +26,20 @@ export const NodeItem = ({ title, description, onclick }: NodeItemProps) => (
 export type NodeTypes = "telegram" | "gmail";
 
 export const RightPaneNodes = () => {
-  const nodes = [
+  const { workflowId } = useParams();
+  const { nodes, setNodes } = useContext(NodesContext)!;
+  if (!workflowId) {
+    console.log(
+      "user should be redirected to home/workflows. This shouldn't happen ideally"
+    );
+    return;
+  }
+
+  const nodesAvailable = [
     {
       title: "Telegram",
       description: "Available: Trigger and Action",
-      onclick: () => "",
+      onclick: () => TelegramOnClick({ workflowId, nodes, setNodes }),
     },
     {
       title: "Gmail",
@@ -37,7 +51,7 @@ export const RightPaneNodes = () => {
 
   return (
     <div className="space-y-3">
-      {nodes.map((node, index) => (
+      {nodesAvailable.map((node, index) => (
         <NodeItem
           key={index}
           title={node.title}

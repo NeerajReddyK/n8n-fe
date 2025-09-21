@@ -2,7 +2,6 @@ import {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
-  type Edge,
   type Node,
   type OnConnect,
   type OnEdgesChange,
@@ -10,10 +9,11 @@ import {
   type OnNodesChange,
   ReactFlow,
 } from "@xyflow/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { TelegramNode } from "./telegramNode";
 import { GmailNode } from "./gmailNode";
 import axios from "axios";
+import { NodesContext } from "../context/nodesContext";
 
 const nodeTypes = {
   telegramNode: TelegramNode,
@@ -21,8 +21,7 @@ const nodeTypes = {
 };
 
 export const Canvas = ({ workflowId }: { workflowId: string }) => {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+  const { nodes, setNodes, edges, setEdges } = useContext(NodesContext)!;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +30,7 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
           `${import.meta.env.VITE_BE_URL}workflow/${workflowId}`,
           {
             headers: {
-              Authorization: import.meta.env.VITE_TOKEN,
+              Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
             },
           }
         );
@@ -79,7 +78,7 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
         },
         {
           headers: {
-            Authorization: import.meta.env.VITE_TOKEN,
+            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
           },
         }
       );
