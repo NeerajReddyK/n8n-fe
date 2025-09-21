@@ -14,6 +14,7 @@ import { TelegramNode } from "./telegramNode";
 import { GmailNode } from "./gmailNode";
 import axios from "axios";
 import { NodesContext } from "../context/nodesContext";
+import uuid4 from "uuid4";
 
 const nodeTypes = {
   telegramNode: TelegramNode,
@@ -51,7 +52,8 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
   );
 
   const onEdgesChange: OnEdgesChange = useCallback(
-    (changes) => {
+    async (changes) => {
+      console.log(changes);
       setEdges((edges) => applyEdgeChanges(changes, edges));
     },
     [setEdges]
@@ -59,8 +61,23 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
 
   // this should change connections in the db as well. which means connections json should be updated with new state
   const onConnect: OnConnect = useCallback(
-    (connection) => {
+    async (connection) => {
       setEdges((edge) => addEdge(connection, edge));
+      const id = uuid4();
+      const source = connection.source;
+      const target = connection.target;
+
+      await axios.put(
+        `${import.meta.env.VITE_BE_URL}workflow/update/edges/${workflowId}`,
+        {
+          newEdge: { id, source, target },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          },
+        }
+      );
     },
     [setEdges]
   );
