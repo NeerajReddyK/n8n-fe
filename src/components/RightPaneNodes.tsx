@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { TelegramOnClick } from "../onclicks/TelegramOnClick";
 import { useContext } from "react";
 import { NodesContext } from "../context/nodesContext";
+import { GmailOnClick } from "../onclicks/GmailOnClick";
 
 export type NodeItemProps = {
   title: string;
@@ -37,15 +38,38 @@ export const RightPaneNodes = () => {
 
   const nodesAvailable = [
     {
-      title: "Telegram",
+      title: "Telegram Trigger",
       description: "Available: Trigger and Action",
-      onclick: () => TelegramOnClick({ workflowId, nodes, setNodes }),
+      onclick: () =>
+        TelegramOnClick({
+          workflowId,
+          nodes,
+          setNodes,
+          type: "telegramTrigger",
+        }),
     },
     {
-      title: "Gmail",
-      description: "Available: Action only",
-      onclick: () => "",
-      // onclick should be changed.
+      title: "Gmail Trigger",
+      description: "Available: Trigger and Action",
+      onclick: () =>
+        GmailOnClick({ workflowId, nodes, setNodes, type: "gmailTrigger" }),
+    },
+    {
+      title: "Telegram Action",
+      description: "Available: Trigger and Action",
+      onclick: () =>
+        TelegramOnClick({
+          workflowId,
+          nodes,
+          setNodes,
+          type: "telegramAction",
+        }),
+    },
+    {
+      title: "Gmail Action",
+      description: "Available: Trigger and Action",
+      onclick: () =>
+        GmailOnClick({ workflowId, nodes, setNodes, type: "gmailAction" }),
     },
   ];
 

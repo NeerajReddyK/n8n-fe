@@ -6,30 +6,29 @@ export const TelegramOnClick = async ({
   workflowId,
   nodes,
   setNodes,
+  type,
 }: {
   workflowId: string;
   nodes: Node[];
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
+  type: string;
 }) => {
-  console.log("inside telegramonclick");
   try {
     const token = `${import.meta.env.VITE_TOKEN}`;
     const id = uuid4();
-    console.log("nodes: ", nodes);
-    console.log("Before axios request");
     const newNode = {
       id: id,
       data: {
         label: "telegramNode",
       },
-      type: "telegramNode",
+      type,
       position: { x: 200, y: 200 },
     };
     setNodes([...nodes, newNode]);
-    const response = await axios.put(
+    await axios.put(
       `${import.meta.env.VITE_BE_URL}workflow/update/nodes/${workflowId}`,
       {
-        newNode: newNode,
+        newNode,
       },
       {
         headers: {
@@ -37,8 +36,6 @@ export const TelegramOnClick = async ({
         },
       }
     );
-    console.log("After completing request");
-    console.log(response);
   } catch (error) {
     console.log("error while adding node to backend: ", error);
   }

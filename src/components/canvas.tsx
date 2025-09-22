@@ -10,15 +10,17 @@ import {
   ReactFlow,
 } from "@xyflow/react";
 import { useCallback, useContext, useEffect } from "react";
-import { TelegramNode } from "./telegramNode";
-import { GmailNode } from "./gmailNode";
+import { TelegramAction, TelegramTrigger } from "./telegramNode";
+import { GmailAction, GmailTrigger } from "./gmailNode";
 import axios from "axios";
 import { NodesContext } from "../context/nodesContext";
 import uuid4 from "uuid4";
 
 const nodeTypes = {
-  telegramNode: TelegramNode,
-  gmailNode: GmailNode,
+  telegramTrigger: TelegramTrigger,
+  telegramAction: TelegramAction,
+  gmailTrigger: GmailTrigger,
+  gmailAction: GmailAction,
 };
 
 export const Canvas = ({ workflowId }: { workflowId: string }) => {
