@@ -2,6 +2,7 @@ import {
   addEdge,
   applyEdgeChanges,
   applyNodeChanges,
+  Controls,
   type Node,
   type OnConnect,
   type OnEdgesChange,
@@ -115,6 +116,8 @@ export const Canvas = ({ workflowId }: { workflowId: string }) => {
       nodeTypes={nodeTypes}
       onConnect={onConnect}
       onNodeDragStop={onNodeDragStop}
-    />
+    >
+      <Controls />
+    </ReactFlow>
   );
 };
